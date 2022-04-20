@@ -33,6 +33,10 @@
 		let inputTitle;
 		let inputStatus;
 		let addNewTaskButton;
+		// CHAT
+		let inputQuestionTitle;
+		let botOutput;
+		let submitInput;
 
 		function init(){
 			taskListElt = document.getElementById("taskListUL");
@@ -41,6 +45,9 @@
 			inputTitle = document.getElementById("inputTitle");
 			inputStatus = document.getElementById("inputStatus");
 			inputStatus = document.getElementById("inputAssignement");
+			// CHAT
+			inputQuestionTitle = document.getElementById("inputQuestionTitle");
+			botOutput = document.getElementById("botOutput");
 
 			reloadList();
 			//setInterval(reloadList,5000);
@@ -49,6 +56,9 @@
 			newTaskButton.addEventListener("click",()=>{modal.style.display = "block";});
 			addNewTaskButton = document.getElementById("addNewTaskButton");
 			addNewTaskButton.addEventListener("click",createNewTask);
+			// CHAT
+			submitInput = document.getElementById("submitInput");
+			submitInput.addEventListener("click", answerUser);
 
 		}
 
@@ -56,6 +66,15 @@
 		document.addEventListener('DOMContentLoaded', initPerson);
 
 let personListElt;
+
+// CHAT
+function answerUser(){
+	let input = inputQuestionTitle.value;
+	console.log(input);
+
+	botOutput.textContent = input;
+}
+
 
 function initPerson() {
     personListElt = document.getElementById("personListUL");
@@ -220,8 +239,6 @@ function reloadListPerson() {
 			myHeaders.append('Content-Type', 'application/json');
 			let payload = {
            			title:inputTitle.value,
-           			status:inputStatus.value,
-					assignement:inputAssignement.value
            	};
 			let myBody = JSON.stringify(payload);
 			let myInit = { 
@@ -242,7 +259,6 @@ function reloadListPerson() {
 				reloadList();
 				//clear fields
 				inputTitle.value="";
-				inputStatus.value="";
 				console.log(`response is ${responseBody}`);
 			})
 			.catch((err)=>{
@@ -269,15 +285,25 @@ function reloadListPerson() {
     		<label for="inputTitle">Title:</label>
     		<input type="text" id="inputTitle" name="title"></input>
 
-   			<label for="inputStatus">Status:</label>
-    		<input type="text" id="inputStatus" name="status"></input>
-
-			<label for="personListSELECT">Assignement:</label>
-    		<select id="personListSELECT" name="assignement"></select>
-			<option value="">-- Please choose a person</option>
     		<button id="addNewTaskButton">Add This Task</button>
     	</div>
     	
+	</div>
+	<div>
+		<h1>Talk to a bot</h1>
+
+		<! Poser une question>
+		<p>
+			<label for="inputQuestionTitle">Question:</label>
+			<input type="text" id="inputQuestionTitle" name="Question"></input>
+			<button id="submitInput">Ask</button>
+		</p>
+
+		<! Avoir une réponse>
+		<p>
+			Answer : <span id="botOutput"></span>
+		</p>
+
 	</div>
 
 
