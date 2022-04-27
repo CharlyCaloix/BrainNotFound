@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "cors": "^2.8.5",
+    "rivescript": "^2.2.0"
+  }
+}

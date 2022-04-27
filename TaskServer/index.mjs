@@ -2,14 +2,13 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 
-import {TaskService} from "./model/TaskService_LowDbImpl.mjs";
-//import {TaskService} from "./model/TaskService_ArrayImpl.mjs";
-let taskServiceInstance;
+import {BotService} from "./model/BotService_LowDbImpl.mjs";
+//import {BotService} from "./model/BotService_ArrayImpl.mjs";
+let botServiceInstance;
 
 import {PersonIdentifier,PersonService} from "./model/Persons.mjs";
 let personServiceAccessPoint = new PersonService({url:"http://localhost",port:3002});
 //Question : How do I assigne a task to a person? : It is a PATCH to a Task...
-
 
 const app = express();
 
@@ -25,19 +24,19 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true })) 
 
 
-app.get('/v2/persons/', async (req, res) => {
+app.get('/persons/', async (req, res) => {
 	// Call person server to retrieve all persons
 	let personsArray = await getAllPersons();
 	res.status(200).json(personsArray);
 })
 
-app.get('/v2/tasks/', (req, res)=>{
+app.get('/bots/', (req, res)=>{
 	try{
-		let myArrayOfTasks;
-		if( undefined == (myArrayOfTasks = taskServiceInstance.getTasks() )){
-			throw new Error("No tasks to get");
+		let myArrayOfBots;
+		if( undefined == (myArrayOfBots = botServiceInstance.getBots() )){
+			throw new Error("No bots to get");
 		}
-		res.status(200).json(myArrayOfTasks);
+		res.status(200).json(myArrayOfBots);
 	}
 	catch(err){
 		console.log(`Error ${err} thrown... stack is : ${err.stack}`);
@@ -46,15 +45,15 @@ app.get('/v2/tasks/', (req, res)=>{
 });
 
 //End point to get a task
-app.get('/v2/tasks/:idddd', (req, res)=>{
+app.get('/bots/:idddd', (req, res)=>{
 	let id = req.params.idddd;
 	if(!isInt(id)) {
 		//not the expected parameter
 		res.status(400).send('BAD REQUEST');
 	}else{
 		try{
-			let myTask = taskServiceInstance.getTask(id);
-			res.status(200).json(myTask);
+			let myBot = botServiceInstance.getBot(id);
+			res.status(200).json(myBot);
 		}
 		catch(err){
 			console.log(`Error ${err} thrown... stack is : ${err.stack}`);
@@ -63,14 +62,27 @@ app.get('/v2/tasks/:idddd', (req, res)=>{
 	}
 });
 
-app.delete('/v2/tasks/:id',(req,res)=>{
+//End point to get a word
+app.post('/bots/word', (req, res)=>{
+	let text = req.body.texte;
+	console.log(text);
+	try{
+		res.status(200).json(text);
+	}
+	catch(err){
+		console.log(`Error ${err} thrown... stack is : ${err.stack}`);
+		res.status(404).send('NOT FOUND');
+	}
+});
+
+app.delete('/bots/:id',(req,res)=>{
 	let id = req.params.id;
 	if(!isInt(id)) { //Should I propagate a bad parameter to the model?
 		//not the expected parameter
 		res.status(400).send('BAD REQUEST');
 	}else{
-		taskServiceInstance
-			.removeTask(id)
+		botServiceInstance
+			.removeBot(id)
 			.then((returnString)=>{
 				console.log(returnString);
 				res.status(201).send('All is OK');
@@ -84,10 +96,10 @@ app.delete('/v2/tasks/:id',(req,res)=>{
 
 
 //create a new task (POST HTTP method)
-app.post('/v2/tasks/',(req,res)=>{
-	let theTaskToAdd = req.body;
-	taskServiceInstance
-		.addTask(theTaskToAdd) 
+app.post('/bots/',(req,res)=>{
+	let theBotToAdd = req.body;
+	botServiceInstance
+		.addBots(theBotToAdd) 
 		.then((returnString)=>{
 			console.log(returnString);
 			res.status(201).send('All is OK');
@@ -98,15 +110,15 @@ app.post('/v2/tasks/',(req,res)=>{
 		});	
 });
 
-app.patch('/v2/tasks/:id',(req,res)=>{
+app.patch('/bots/:id',(req,res)=>{
 	let id = req.params.id;
 	if(!isInt(id)) { //Should I propagate a bad parameter to the model?
 		//not the expected parameter
 		res.status(400).send('BAD REQUEST');
 	}else{
 		let newValues = req.body; //the client is responsible for formating its request with proper syntax.
-		taskServiceInstance
-			.updateTask(id, newValues)
+		botServiceInstance
+			.updateBot(id, newValues)
 			.then((returnString)=>{
 				console.log(returnString);
 				res.status(201).send('All is OK');
@@ -118,26 +130,26 @@ app.patch('/v2/tasks/:id',(req,res)=>{
 	}	
 });
 
-app.patch('/v2/tasks/:idddd', async (req, res) =>{
+app.patch('/bots/:idddd', async (req, res) =>{
 /* #TODO
 	try{
 		let personID = req.body.personID;
-		taskServiceInstance.updateTask(id);
+		botServiceInstance.updateTask(id);
 	}
 	catch{
 
 	}*/
 });
 
-app.put('/v2/tasks/:id',(req,res)=>{
+app.put('/bots/:id',(req,res)=>{
 	let id = req.params.id;
 	if(!isInt(id)) { //Should I propagate a bad parameter to the model?
 		//not the expected parameter
 		res.status(400).send('BAD REQUEST');
 	}else{
 		let newValues = req.body; //the client is responsible for formating its request with proper syntax.
-		taskServiceInstance
-			.replaceTask(id, newValues)
+		botServiceInstance
+			.replaceBot(id, newValues)
 			.then((returnString)=>{
 				console.log(returnString);
 				res.status(201).send('All is OK');
@@ -152,16 +164,16 @@ app.put('/v2/tasks/:id',(req,res)=>{
 
 let id = Math.floor(Math.random() * Math.floor(100000)) ;
 let randomPerson = await getRandomPerson();
-let aTask ={ //UGLY
+let aBot ={ //UGLY
 	'id':id,
 	'title':'Random Title',
 	'assignement':randomPerson
 };
 
-TaskService.create(personServiceAccessPoint).then(ts=>{
-	taskServiceInstance=ts;
-	taskServiceInstance
-		.addTask(aTask)
+BotService.create(personServiceAccessPoint).then(ts=>{
+	botServiceInstance=ts;
+	botServiceInstance
+		.addBots(aBot)
 		.catch((err)=>{console.log(err);});
 	app.listen(port, () => {
   		console.log(`Example app listening at http://localhost:${port}`)
