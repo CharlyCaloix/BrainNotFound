@@ -25,15 +25,16 @@
 		}
 	</style>
 
-	<script src="https://unpkg.com/rivescript@latest/dist/rivescript.min.js"></script>
+    <script src="https://unpkg.com/rivescript@latest/dist/rivescript.min.js"></script>
 	<script src = "..\TaskServer\index.mjs"></script>
-	<script>
+		<script>
 
 		document.addEventListener('DOMContentLoaded',init);
 
 		let botListElt;
 		let modal;
-		let inputTitle;
+		let inputName;
+		let inputID;
 		let inputStatus;
 		let addNewBotButton;
 		// CHAT
@@ -45,7 +46,8 @@
 			botListElt = document.getElementById("botListUL");
 			modal = document.getElementById("newBotModal");
 			personListElt = document.getElementById("personListSELECT")
-			inputTitle = document.getElementById("inputTitle");
+			inputName = document.getElementById("inputName");
+			inputID = document.getElementById("InputID");
 			inputStatus = document.getElementById("inputStatus");
 			inputStatus = document.getElementById("inputAssignement");
 			// CHAT
@@ -209,7 +211,7 @@ function reloadListPerson() {
 			//patchBtn.addEventListener("click",()=>{updateBot(bot.id)});
 			item.appendChild(patchBtn);
 
-			item.innerHTML += ` ${bot.title} (asssigned to ${bot.assignement.personId} )`;
+			item.innerHTML += ` ${bot.name} (ID:${bot.id}), ${bot.comment}`;
 			return item;
 		}
 
@@ -256,10 +258,13 @@ function reloadListPerson() {
   			modal.style.display = "none"; // Make the modal disapear
 
 			//Create the request
+			console.log(`Input Name value : ${inputName.value}`);
+			//console.log(`Input ID value : ${inputID.value}`);
+
 			let myHeaders = new Headers();
 			myHeaders.append('Content-Type', 'application/json');
 			let payload = {
-           			title:inputTitle.value,
+					name:inputName.value
            	};
 			let myBody = JSON.stringify(payload);
 			let myInit = { 
@@ -279,7 +284,8 @@ function reloadListPerson() {
 			.then((responseBody)=>{
 				reloadList();
 				//clear fields
-				inputTitle.value="";
+				inputName.value="";
+				inputID.value="";
 				console.log(`response is ${responseBody}`);
 			})
 			.catch((err)=>{
@@ -341,8 +347,11 @@ function reloadListPerson() {
 		
 		<div class="modal-content">
 			<h1>Create a new Bot</h1>
-    		<label for="inputTitle">Title:</label>
-    		<input type="text" id="inputTitle" name="title"></input>
+    		<label for="inputName">Name:</label>
+    		<input type="text" id="inputName" name="name"></input>
+
+			<label for="inputID">ID:</label>
+    		<input type="int" id="inputID" name="id"></input>
 
     		<button id="addNewBotButton">Add This Bot</button>
     	</div>

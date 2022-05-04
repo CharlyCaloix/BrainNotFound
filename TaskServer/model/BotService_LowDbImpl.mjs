@@ -23,6 +23,7 @@ class BotService{
 		let newBot;
 		try{
   			newBot = new Bot(anObject);
+			console.log(newBot);
 		}catch(err){
 			throw err; //throwing an error inside a Promise
 		}

@@ -95,7 +95,7 @@ app.delete('/bots/:id',(req,res)=>{
 });
 
 
-//create a new task (POST HTTP method)
+//create a new bot (POST HTTP method)
 app.post('/bots/',(req,res)=>{
 	let theBotToAdd = req.body;
 	botServiceInstance
