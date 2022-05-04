@@ -62,8 +62,8 @@ app.get('/bots/:idddd', (req, res)=>{
 	}
 });
 
-//End point to get a word
-app.post('/bots/word', (req, res)=>{
+//End point to get an answer
+app.post('/bots/answer', (req, res)=>{
 	let text = req.body.texte;
 	console.log(text);
 	try{
@@ -98,6 +98,7 @@ app.delete('/bots/:id',(req,res)=>{
 //create a new bot (POST HTTP method)
 app.post('/bots/',(req,res)=>{
 	let theBotToAdd = req.body;
+	console.log(theBotToAdd);
 	botServiceInstance
 		.addBots(theBotToAdd) 
 		.then((returnString)=>{
@@ -110,15 +111,16 @@ app.post('/bots/',(req,res)=>{
 		});	
 });
 
-app.patch('/bots/:id',(req,res)=>{
-	let id = req.params.id;
+app.patch('/bots/',(req,res)=>{
+	let id = req.body.id;
+	let botToPatch = req.body;
+
 	if(!isInt(id)) { //Should I propagate a bad parameter to the model?
 		//not the expected parameter
 		res.status(400).send('BAD REQUEST');
 	}else{
-		let newValues = req.body; //the client is responsible for formating its request with proper syntax.
 		botServiceInstance
-			.updateBot(id, newValues)
+			.updateBot(id, botToPatch)
 			.then((returnString)=>{
 				console.log(returnString);
 				res.status(201).send('All is OK');

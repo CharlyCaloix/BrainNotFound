@@ -1,5 +1,4 @@
 import {Bot} from "./Bot.mjs";
-import {PersonService} from "./Persons.mjs";
 import {Low, JSONFile} from 'lowdb';
 
 
@@ -23,13 +22,13 @@ class BotService{
 		let newBot;
 		try{
   			newBot = new Bot(anObject);
-			console.log(newBot);
+			//console.log(newBot);
 		}catch(err){
 			throw err; //throwing an error inside a Promise
 		}
 		this.db.data.bots.push(newBot);
 		await this.db.write();
-		return `added bot of id ${newBot.id}`;
+		return `Added bot of id ${newBot.id}`;
 	}
 
 

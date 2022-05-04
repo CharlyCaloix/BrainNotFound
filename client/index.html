@@ -33,9 +33,11 @@
 
 		let botListElt;
 		let modal;
+		// BOT INPUTS
 		let inputName;
 		let inputID;
-		let inputStatus;
+		let inputPath;
+		let inputComment;
 		let addNewBotButton;
 		// CHAT
 		let inputQuestionTitle;
@@ -47,9 +49,9 @@
 			modal = document.getElementById("newBotModal");
 			personListElt = document.getElementById("personListSELECT")
 			inputName = document.getElementById("inputName");
-			inputID = document.getElementById("InputID");
-			inputStatus = document.getElementById("inputStatus");
-			inputStatus = document.getElementById("inputAssignement");
+			inputID = document.getElementById("inputID");
+			inputPath = document.getElementById("inputPath");
+			inputComment = document.getElementById("inputComment");
 			// CHAT
 			inputQuestionTitle = document.getElementById("inputQuestionTitle");
 			botOutput = document.getElementById("botOutput");
@@ -249,22 +251,62 @@ function reloadListPerson() {
 
 		function updateBot(botId){
 			console.log(`updating bot with Id ${botId}`);
+
+			//Create the request
+			let myHeaders = new Headers();
+			myHeaders.append('Content-Type', 'application/json');
+			let payload = {
+					name:"Steeve",
+					id:botId,
+					comment:"Another bot has changed !"
+           	};
+			let myBody = JSON.stringify(payload);
+			let myInit = { 
+				method: 'PATCH',
+           		headers: myHeaders,
+           		mode: 'cors',
+           		cache: 'default',
+           		body:myBody
+        	};
+        	let myURL = "http://localhost:3001/bots";
+
+        	//launch the request
+			fetch(myURL,myInit)
+			.then((httpResponse)=>{
+				return httpResponse.text();
+			})
+			.then((responseBody)=>{
+				reloadList();
+				//clear fields
+				inputName.value="";
+				console.log(`response is ${responseBody}`);
+			})
+			.catch((err)=>{
+				console.log(`ERROR : ${err}, ${err.stack}`);
+			})	
+
 			//TODO
 			//Obvioulsly, you will need to launch a modal
 		}
 
+		// Crée un nouveau cerveau avec les données du modal de création
 		function createNewBot(){
 
   			modal.style.display = "none"; // Make the modal disapear
 
 			//Create the request
 			console.log(`Input Name value : ${inputName.value}`);
-			//console.log(`Input ID value : ${inputID.value}`);
+			console.log(`Input ID value : ${inputID.value}`);
+			console.log(`Input Path value : ${inputPath.value}`);
+			console.log(`Input Comment value : ${inputComment.value}`);
 
 			let myHeaders = new Headers();
 			myHeaders.append('Content-Type', 'application/json');
 			let payload = {
-					name:inputName.value
+					name:inputName.value,
+					id:inputID.value,
+					pathToFile:inputPath.value,
+					comment:inputComment.value
            	};
 			let myBody = JSON.stringify(payload);
 			let myInit = { 
@@ -285,16 +327,14 @@ function reloadListPerson() {
 				reloadList();
 				//clear fields
 				inputName.value="";
-				inputID.value="";
 				console.log(`response is ${responseBody}`);
 			})
 			.catch((err)=>{
-				console.log(`ERROR : ${err}`);
+				console.log(`ERROR : ${err}, ${err.stack}`);
 			})		
 		}
 
-
-
+		// Envoie une question à un cerveau en particulier
 		function sendRequestToBrain(question){
 			//Create the request
 			let myHeaders = new Headers();
@@ -339,7 +379,7 @@ function reloadListPerson() {
 	<ul id="botListUL">
 	</ul>
 
-    <ul id="personListUL">
+   <ul id="personListUL">
     </ul>
 
 	<button id="newBotButton">ADD A NEW BOT</button>
@@ -351,7 +391,13 @@ function reloadListPerson() {
     		<input type="text" id="inputName" name="name"></input>
 
 			<label for="inputID">ID:</label>
-    		<input type="int" id="inputID" name="id"></input>
+    		<input type="number" id="inputID" name="id"></input>
+
+			<label for="inputPath">Path of brain:</label>
+    		<input type="text" id="inputPath" name="path" value="/brains/baseBrain.rive"></input>
+
+			<label for="inputComment">Comment:</label>
+    		<input type="text" id="inputComment" name="Comment"></input>
 
     		<button id="addNewBotButton">Add This Bot</button>
     	</div>
