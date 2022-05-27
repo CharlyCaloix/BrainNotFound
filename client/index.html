@@ -308,6 +308,7 @@ function reloadListPerson() {
 					pathToFile:inputPath.value,
 					comment:inputComment.value
            	};
+			   console.log("Payload : "+payload);
 			let myBody = JSON.stringify(payload);
 			let myInit = { 
 				method: 'POST',

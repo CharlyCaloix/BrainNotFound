@@ -24,7 +24,7 @@ class Bot{
       if(!isString(data.name)){
         throw new Error("Task Creation : passed Title is not a string");
       }
-      this.title = data.name;
+      this.name = data.name;
     } else {
       this.name = "Another Mark";
     }
