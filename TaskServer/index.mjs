@@ -1,6 +1,7 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
+import RiveScript from 'rivescript';
 
 import {BotService} from "./model/BotService_LowDbImpl.mjs";
 //import {BotService} from "./model/BotService_ArrayImpl.mjs";
@@ -17,6 +18,8 @@ const app = express();
 app.use(cors())
 ////
 
+let mainBot = new RiveScript();
+mainBot.loadFile("./../client/brains/baseBrain.rive").then(botLoaded).catch(botLoadingFailed);
 
 const port = 3001
 
@@ -76,6 +79,7 @@ app.post('/bots/answer', (req, res)=>{
 	let text = req.body.texte;
 	console.log(text);
 	try{
+		bot
 		res.status(200).json(text);
 	}
 	catch(err){
@@ -192,6 +196,18 @@ BotService.create(personServiceAccessPoint).then(ts=>{
 });
 
 //HELPER
+
+//BOT
+function botLoaded(){
+	console.log("Chatbot is ready to play with.");
+	mainBot.sortReplies();
+}
+
+function botLoadingFailed(){
+	console.log("Chatbot failed loading.");
+}
+// ---------------------------------------------
+
 async function getRandomPerson(){
 	let tempArray = await personServiceAccessPoint.getAllPersons();
 	let key = Math.floor(Math.random() * tempArray.length) ;
