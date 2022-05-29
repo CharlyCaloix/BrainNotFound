@@ -1,20 +1,37 @@
 {
   "bots": [
     {
-      "id": 64522,
-      "title": "Random Title",
-      "startDate": "2022-04-27T10:19:16.550Z",
-      "endDate": "2022-04-27T10:19:16.550Z",
-      "status": "",
-      "tags": [],
-      "assignement": {
-        "personId": 54445
-      }
+      "id": 65005,
+      "name": "Steeve",
+      "startDate": "2022-05-27T22:29:01.167Z",
+      "pathToFile": "/brains/baseBraine.rive",
+      "tags": [
+        "New !"
+      ],
+      "comment": "Another bot has changed !"
     },
     {
-      "id": 55180,
+      "id": 6,
+      "name": "Steeve",
+      "startDate": "2022-05-27T23:50:23.663Z",
+      "pathToFile": "/brains/baseBrain.rive",
+      "tags": [
+        "New !"
+      ],
+      "comment": "Another bot has changed !"
+    },
+    {
+      "id": 3,
+      "name": "Steeve",
+      "startDate": "2022-05-28T00:51:42.081Z",
+      "pathToFile": "/brains/baseBrain.rive",
+      "tags": "Still old.",
+      "comment": "Another bot has changed !"
+    },
+    {
+      "id": 72670,
       "name": "Another Mark",
-      "startDate": "2022-05-27T21:41:30.281Z",
+      "startDate": "2022-05-29T14:19:53.467Z",
       "pathToFile": "/brains/baseBraine.rive",
       "tags": [
         "New !"
@@ -22,55 +39,14 @@
       "comment": "This bot was not commented yet"
     },
     {
-      "id": 1,
-      "title": "Nous être dégénérés",
-      "startDate": "2022-05-27T21:42:38.927Z",
-      "pathToFile": "/brains/baseBrain.rive",
-      "tags": [
-        "New !"
-      ],
-      "comment": "Another bot has changed !",
-      "name": "Steeve"
-    },
-    {
-      "id": "2",
-      "title": "Me",
-      "startDate": "2022-05-27T21:44:37.024Z",
-      "pathToFile": "/brains/baseBrain.rive",
-      "tags": [
-        "New !"
-      ],
-      "comment": "New bot \"Me\"?"
-    },
-    {
-      "id": 11030,
+      "id": 11534,
       "name": "Another Mark",
-      "startDate": "2022-05-27T21:50:21.622Z",
+      "startDate": "2022-05-29T14:19:59.449Z",
       "pathToFile": "/brains/baseBraine.rive",
       "tags": [
         "New !"
       ],
       "comment": "This bot was not commented yet"
-    },
-    {
-      "id": 44269,
-      "name": "Another Mark",
-      "startDate": "2022-05-27T21:50:23.072Z",
-      "pathToFile": "/brains/baseBraine.rive",
-      "tags": [
-        "New !"
-      ],
-      "comment": "This bot was not commented yet"
-    },
-    {
-      "id": "4",
-      "name": "ReWard TeNKs",
-      "startDate": "2022-05-27T21:50:44.515Z",
-      "pathToFile": "/brains/baseBrain.rive",
-      "tags": [
-        "New !"
-      ],
-      "comment": "Comment?"
     }
   ]
 }

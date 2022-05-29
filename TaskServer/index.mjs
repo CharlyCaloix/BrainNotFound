@@ -23,6 +23,15 @@ const port = 3001
 app.use(bodyParser.json()) 
 app.use(bodyParser.urlencoded({ extended: true })) 
 
+app.get('/', (req, res)=>{
+    try{
+        res.sendFile('/client/index.html', { root: './..' })
+    }
+    catch(err){
+        console.log(`Error ${err} thrown`);
+        res.status(404).send('NOT FOUND');
+    }
+});
 
 app.get('/persons/', async (req, res) => {
 	// Call person server to retrieve all persons
