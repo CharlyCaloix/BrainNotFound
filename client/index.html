@@ -3,6 +3,31 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<style>
+		.collapsible {
+		  background-color: #777;
+		  color: white;
+		  cursor: pointer;
+		  padding: 18px;
+		  width: 50%;
+		  border: none;
+		  text-align: left;
+		  outline: none;
+		  font-size: 15px;
+		}
+		
+		.active, .collapsible:hover {
+		  background-color: #555;
+		}
+		
+		.content {
+		  padding: 0 18px;
+		  display: none;
+		  overflow: hidden;
+		  background-color: #f1f1f1;
+		}
+		</style>
+
 	<title>Bot Service Test Interface (BaSTI)</title>
 	<style>
 		.modal {
@@ -25,7 +50,6 @@
 		}
 	</style>
 
-    <script src="https://unpkg.com/rivescript@latest/dist/rivescript.min.js"></script>
 	<script src = "..\TaskServer\index.mjs"></script>
 		<script>
 
@@ -43,6 +67,10 @@
 		let inputQuestionTitle;
 		let botOutput;
 		let submitInput;
+		// Bot tab
+		//Ce tableau regroupe les bots qui ont été affichés, pour que les élements qui n'ont pas été modifiés ne changent
+		// pas en blanc. Par exemple : si le nom est laissé inchangé, modifier ne doit pas changer son nom en "".
+		let botTab = new Array();
 
 		function init(){
 			botListElt = document.getElementById("botListUL");
@@ -68,9 +96,7 @@
 			submitInput = document.getElementById("submitInput");
 			submitInput.addEventListener("click", answerUser);
 
-			// BOT
-			var chatbot = new RiveScript();
-			chatbot.loadFile("brains/baseBrain.rive").then(botLoaded).catch(botLoadingFailed);
+
 
 		}
 
@@ -186,35 +212,155 @@ function reloadListPerson() {
 
 
 		function createItem(bot){
+			botTab.push(bot);
+
 			let item = document.createElement("li");
+
+			let affichageDiv = document.createElement("div");
+
+			let affichage_id = document.createElement("input");
+			affichage_id.setAttribute("class",`modif_${bot.id}`);
+			affichage_id.setAttribute("placeholder",bot.id);
+			affichage_id.setAttribute("readonly",null);
+
+			let affichage_name = document.createElement("input");
+			affichage_name.setAttribute("class",`modif_${bot.id}`);
+			affichage_name.setAttribute("placeholder",bot.name);
+
+			let affichage_date = document.createElement("input");
+			affichage_date.setAttribute("class",`modif_${bot.id}`);
+			affichage_date.setAttribute("placeholder",bot.startDate);
+
+			let affichage_path = document.createElement("input");
+			affichage_path.setAttribute("class",`modif_${bot.id}`);
+			affichage_path.setAttribute("placeholder",bot.pathToFile);
+
+			let affichage_tags = document.createElement("input");
+			affichage_tags.setAttribute("class",`modif_${bot.id}`);
+			affichage_tags.setAttribute("placeholder",bot.tags);
+
+			let affichage_comment = document.createElement("input");
+			affichage_comment.setAttribute("class",`modif_${bot.id}`);
+			affichage_comment.setAttribute("placeholder",bot.comment);
+
+			affichageDiv.appendChild(affichage_id);
+			affichageDiv.appendChild(affichage_name);
+			affichageDiv.appendChild(affichage_date);
+			affichageDiv.appendChild(affichage_path);
+			affichageDiv.appendChild(affichage_tags);
+			affichageDiv.appendChild(affichage_comment);
+
+
+			item.appendChild(affichageDiv);
+
+		
 			
 			// Adding a DELETE Button
 			let delBtn = document.createElement("button");
-			delBtn.innerHTML = "DELETE";
+			delBtn.innerHTML = "Supprimer";
 			let id = `del_${bot.id}`;
-			
 			delBtn.setAttribute("id",id);
 			delBtn.setAttribute("onclick",`deleteBot(${bot.id})`);
-			//delBtn.addEventListener("click",()=>{deleteBot(bot.id)});
 			item.appendChild(delBtn);
 
 
 			// Adding a PUT Button
 			let putBtn = document.createElement("button");
-			putBtn.innerHTML = "PUT";
+			putBtn.innerHTML = "Remplacer (PUT)";
 			putBtn.setAttribute("onclick",`replaceBot(${bot.id})`);
-			//putBtn.addEventListener("click",()=>{replaceBot(bot.id)});
 			item.appendChild(putBtn);
 			
 			// Adding a PATCH Button
 			let patchBtn = document.createElement("button");
-			patchBtn.innerHTML = "PATCH";
+			patchBtn.innerHTML = "Patcher";
 			patchBtn.setAttribute("onclick",`updateBot(${bot.id})`);
-			//patchBtn.addEventListener("click",()=>{updateBot(bot.id)});
 			item.appendChild(patchBtn);
 
-			item.innerHTML += ` ${bot.name} (ID:${bot.id}), ${bot.comment}`;
+			// Adding a modification Button
+			let modifBtn = document.createElement("button");
+			modifBtn.innerHTML = "Appliquer modifications";
+			modifBtn.setAttribute("onclick",`updateBot_2(${bot.id})`);
+			//modifBtn.setAttribute("onclick",`updateBot(${bot.id})`);
+			item.appendChild(modifBtn);
+			
+
+			//item.innerHTML += ` ${bot.name} (${bot.id}), ${bot.comment}`;
+			//console.log(botTab);
 			return item;
+		}
+
+		function updateBot_2(botId){
+			console.log(`updating bot with Id ${botId}`);
+			// On récupère les valeurs que le bot avait avant d'être modifié
+			var bot = botTab.findIndex(x => x.id === botId);
+			// On récupère les valeurs rentrées
+			var modTab = document.getElementsByClassName(`modif_${botId}`);
+			console.log("Tableau des modifications, nom : "+modTab[1].value);
+
+			// On vérifie qu'on modifie les élements qui ont bien été changés
+			var bot_p0 = modTab[0].value;
+			if( bot_p0.localeCompare("") == 0 ){
+				bot_p0=bot.id
+			}
+			var bot_p1 = modTab[1].value;
+			console.log(bot_p1);
+			if( bot_p1.localeCompare("") == 0 ){
+				bot_p1=bot.name
+			}
+			var bot_p2 = modTab[2].value;
+			if( bot_p2.localeCompare("") == 0 ){
+				bot_p2=bot.startDate
+			}
+			var bot_p3 = modTab[3].value;
+			if( bot_p3.localeCompare("") == 0 ){
+				bot_p3=bot.pathToFile
+			}
+			var bot_p4 = modTab[4].value;
+			if( bot_p4.localeCompare("") == 0 ){
+				bot_p4=bot.tags
+			}
+			var bot_p5 = modTab[5].value;
+			if( bot_p5.localeCompare("") == 0 ){
+				bot_p5=bot.comment
+			}
+			
+
+			//Create the request
+			let myHeaders = new Headers();
+			myHeaders.append('Content-Type', 'application/json');
+			let payload = {
+					id:botId,
+					name:bot_p1,
+					startDate:bot_p2,
+					pathToFile:bot_p3,
+					tags:bot_p4,
+					comment:bot_p5
+
+           	};
+			let myBody = JSON.stringify(payload);
+			let myInit = { 
+				method: 'PATCH',
+           		headers: myHeaders,
+           		mode: 'cors',
+           		cache: 'default',
+           		body:myBody
+        	};
+        	let myURL = "http://localhost:3001/bots";
+
+        	//launch the request
+			fetch(myURL,myInit)
+			.then((httpResponse)=>{
+				return httpResponse.text();
+			})
+			.then((responseBody)=>{
+				reloadList();
+				//clear fields
+				inputName.value="";
+				console.log(`response is ${responseBody}`);
+			})
+			.catch((err)=>{
+				console.log(`ERROR : ${err}, ${err.stack}`);
+			})	
 		}
 
 		function deleteBot(botId){
@@ -229,7 +375,7 @@ function reloadListPerson() {
                	cache: 'default' 
             };
             let myURL = `http://localhost:3001/bots/${botId}`;
-			//let myURL = "http://localhost:3001/"+botId;
+
 			fetch(myURL,myInit)
 				.then((httpResponse)=>{
 					return httpResponse.text()
@@ -284,9 +430,6 @@ function reloadListPerson() {
 			.catch((err)=>{
 				console.log(`ERROR : ${err}, ${err.stack}`);
 			})	
-
-			//TODO
-			//Obvioulsly, you will need to launch a modal
 		}
 
 		// Crée un nouveau cerveau avec les données du modal de création
@@ -308,7 +451,7 @@ function reloadListPerson() {
 					pathToFile:inputPath.value,
 					comment:inputComment.value
            	};
-			   console.log("Payload : "+payload);
+			   //console.log("Payload : "+payload);
 			let myBody = JSON.stringify(payload);
 			let myInit = { 
 				method: 'POST',
@@ -420,7 +563,6 @@ function reloadListPerson() {
 		</p>
 
 	</div>
-
 
 </body>
 </html>
