@@ -18,6 +18,7 @@ const app = express();
 app.use(cors())
 ////
 
+let mainUser = "local-user";
 let mainBot = new RiveScript();
 mainBot.loadFile("./../client/brains/baseBrain.rive").then(botLoaded).catch(botLoadingFailed);
 
@@ -75,12 +76,14 @@ app.get('/bots/:idddd', (req, res)=>{
 });
 
 //End point to get an answer
-app.post('/bots/answer', (req, res)=>{
-	let text = req.body.texte;
-	console.log(text);
+app.post('/anwser', async (req, res)=>{ // TODO
+
+	let question = req.body.input;
+	console.log("Question reçue par le serveur : "+question);
 	try{
-		bot
-		res.status(200).json(text);
+		let reponse = await mainBot.reply(mainUser, question);
+		console.log("Réponse du serveur : "+reponse);
+		res.status(200).json(reponse);
 	}
 	catch(err){
 		console.log(`Error ${err} thrown... stack is : ${err.stack}`);
@@ -124,8 +127,8 @@ app.post('/bots/',(req,res)=>{
 		});	
 });
 
-app.patch('/bots/',(req,res)=>{
-	let id = req.body.id;
+app.patch('/bots/:id',(req,res)=>{
+	let id = req.params.id;
 	let botToPatch = req.body;
 
 	if(!isInt(id)) { //Should I propagate a bad parameter to the model?
@@ -145,16 +148,7 @@ app.patch('/bots/',(req,res)=>{
 	}	
 });
 
-app.patch('/bots/:idddd', async (req, res) =>{
-/* #TODO
-	try{
-		let personID = req.body.personID;
-		botServiceInstance.updateTask(id);
-	}
-	catch{
-
-	}*/
-});
+//
 
 app.put('/bots/:id',(req,res)=>{
 	let id = req.params.id;

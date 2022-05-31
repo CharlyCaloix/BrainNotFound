@@ -108,10 +108,10 @@ let personListElt;
 function answerUser(){
 	let input = inputQuestionTitle.value;
 	//console.log(input);
-//	let answer = sendRequestToBrain(input);
-//	console.log(`Réponse reçue par l'HTML : ${answer}`);
+	let answer = sendRequestToBrain(input);
+	console.log(`Réponse reçue par l'HTML : ${answer}`);
 
-	botOutput.textContent = input;
+	botOutput.textContent = answer;
 	//botOutput.textContent = answer;
 }
 
@@ -154,7 +154,7 @@ function reloadListPerson() {
     fetch(myURL, myInit)
         .then((httpResponse) => {
             for (let field of httpResponse.headers) {
-                console.log(`raw = ${field}`);
+                //console.log(`raw = ${field}`);
             }
             return httpResponse.json()
         })
@@ -194,7 +194,7 @@ function reloadListPerson() {
 			fetch(myURL,myInit)
 				.then((httpResponse)=>{
 					for(let field of httpResponse.headers){
-						console.log(`raw = ${field}`);
+						//console.log(`raw = ${field}`);
 					}	
 					return httpResponse.json()
 				})
@@ -344,7 +344,7 @@ function reloadListPerson() {
            		cache: 'default',
            		body:myBody
         	};
-        	let myURL = "http://localhost:3001/bots";
+        	let myURL = `http://localhost:3001/bots/${botId}`;
 
         	//launch the request
 			fetch(myURL,myInit)
@@ -483,7 +483,7 @@ function reloadListPerson() {
 			let myHeaders = new Headers();
 			myHeaders.append('Content-Type', 'application/json');
 			let payload = {
-           			quest:question
+           			input:question
            	};
 			let myBody = JSON.stringify(payload);
 			let myInit = { 
