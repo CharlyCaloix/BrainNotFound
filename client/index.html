@@ -105,14 +105,10 @@
 let personListElt;
 
 // CHAT
-function answerUser(){
+async function answerUser(){
 	let input = inputQuestionTitle.value;
 	//console.log(input);
-	let answer = sendRequestToBrain(input);
-	console.log(`Réponse reçue par l'HTML : ${answer}`);
-
-	botOutput.textContent = answer;
-	//botOutput.textContent = answer;
+	await sendRequestToBrain(input);
 }
 
 //BOT
@@ -172,6 +168,7 @@ function reloadListPerson() {
 
 
 		function reloadList(){
+			botTab=new Array();
 			//first, clean up
 			while (botListElt.firstChild) {
 				botListElt.removeChild(botListElt.firstChild);
@@ -242,12 +239,33 @@ function reloadListPerson() {
 			affichage_comment.setAttribute("class",`modif_${bot.id}`);
 			affichage_comment.setAttribute("placeholder",bot.comment);
 
+			let discord_button= document.createElement("button");
+			console.log("Discord status of the bot : "+bot.discord_status);
+			if(bot.discord_status==true){
+				discord_button.setAttribute("style","color:green");
+			}else{
+				discord_button.setAttribute("style","color:red");
+			}
+			discord_button.setAttribute("onclick", `update_discord_status(${bot.id})`);
+			discord_button.innerHTML="Discord";
+
+			let socket_button= document.createElement("button");
+			if(bot.socket_status==true){
+				socket_button.setAttribute("style","color:green");
+			}else{
+				socket_button.setAttribute("style","color:red");
+			}
+			socket_button.setAttribute("onclick", `update_socket_status(${bot.id})`);
+			socket_button.innerHTML="Socket";
+
 			affichageDiv.appendChild(affichage_id);
 			affichageDiv.appendChild(affichage_name);
 			affichageDiv.appendChild(affichage_date);
 			affichageDiv.appendChild(affichage_path);
 			affichageDiv.appendChild(affichage_tags);
 			affichageDiv.appendChild(affichage_comment);
+			affichageDiv.appendChild(discord_button);
+			affichageDiv.appendChild(socket_button);
 
 
 			item.appendChild(affichageDiv);
@@ -284,8 +302,88 @@ function reloadListPerson() {
 			
 
 			//item.innerHTML += ` ${bot.name} (${bot.id}), ${bot.comment}`;
-			//console.log(botTab);
+			console.log(botTab);
 			return item;
+		}
+
+		function update_discord_status(botId){
+			// On cherche la valeur courante du statut dans le bot bot
+			var numeroBot = botTab.findIndex(x => x.id === botId);
+			var bot = botTab[numeroBot];
+			console.log("Bot dont le statut doit changer : "+bot);
+			var setup = bot.discord_status;
+			var newSetup= !setup;
+			console.log(`updating status of bot : ${bot}, ${setup} => ${newSetup}`);
+			//Create the request
+			let myHeaders = new Headers();
+			myHeaders.append('Content-Type', 'application/json');
+			let payload = {
+				discord_status:newSetup
+           	};
+			let myBody = JSON.stringify(payload);
+			let myInit = { 
+				method: 'PATCH',
+           		headers: myHeaders,
+           		mode: 'cors',
+           		cache: 'default',
+           		body:myBody
+        	};
+        	let myURL = `http://localhost:3001/bots/${botId}`;
+
+        	//launch the request
+			fetch(myURL,myInit)
+			.then((httpResponse)=>{
+				return httpResponse.text();
+			})
+			.then((responseBody)=>{
+				reloadList();
+				//clear fields
+				inputName.value="";
+				console.log(`response is ${responseBody}`);
+			})
+			.catch((err)=>{
+				console.log(`ERROR : ${err}, ${err.stack}`);
+			})
+		}
+
+		function update_socket_status(botId){
+			// On cherche la valeur courante du statut dans le bot bot
+			var numeroBot = botTab.findIndex(x => x.id === botId);
+			var bot = botTab[numeroBot];
+			console.log("Bot dont le statut doit changer : "+bot);
+			var setup = bot.socket_status;
+			var newSetup= !setup;
+			console.log(`updating status of bot : ${bot}, ${setup} => ${newSetup}`);
+			//Create the request
+			let myHeaders = new Headers();
+			myHeaders.append('Content-Type', 'application/json');
+			let payload = {
+				socket_status:newSetup
+           	};
+			let myBody = JSON.stringify(payload);
+			let myInit = { 
+				method: 'PATCH',
+           		headers: myHeaders,
+           		mode: 'cors',
+           		cache: 'default',
+           		body:myBody
+        	};
+        	let myURL = `http://localhost:3001/bots/${botId}`;
+
+        	//launch the request
+			fetch(myURL,myInit)
+			.then((httpResponse)=>{
+				return httpResponse.text();
+			})
+			.then((responseBody)=>{
+				reloadList();
+				//clear fields
+				inputName.value="";
+				console.log(`response is ${responseBody}`);
+			})
+			.catch((err)=>{
+				console.log(`ERROR : ${err}, ${err.stack}`);
+			})
 		}
 
 		function updateBot_2(botId){
@@ -493,7 +591,7 @@ function reloadListPerson() {
            		cache: 'default',
            		body:myBody
         	};
-        	let myURL = "http://localhost:3001/bots/answer";
+        	let myURL = "http://localhost:3001/answer";
 			let response;
 
         	//launch the request
@@ -504,14 +602,11 @@ function reloadListPerson() {
 			})
 			.then((responseBody)=>{
 				console.log(`Retour de la question (then 2) : ${responseBody}`);
-				response = responseBody;
-				return response;
+				botOutput.textContent = responseBody;
 			})
 			.catch((err)=>{
 				console.log(`ERROR : ${err}`);
 			})
-
-			return response;
 		}
 
 	</script>

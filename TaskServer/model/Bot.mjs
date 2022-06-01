@@ -8,6 +8,9 @@ class Bot{
   static pathToFile  = this.pathToFile;
   static tags = this.tags;
   static comment = this.comment;
+  static discord_status=this.discord_status;
+  static socket_status=this.socket_status;
+
 
   constructor(data){   //id, name, startDate, pathToFile
 
@@ -65,6 +68,26 @@ class Bot{
     } else {
       // dummy Value
       this.comment = "This bot was not commented yet";
+    }
+
+    if(undefined != data.discord_status) {
+      if(false){ // TODO
+        throw new Error("Task Creation : passed assignement is not a Person identifier");
+      }
+      this.discord_status = data.discord_status;
+    } else {
+      // dummy Value
+      this.discord_status = true;
+    }
+
+    if(undefined != data.socket_status) {
+      if(false){ // TODO
+        throw new Error("Task Creation : passed assignement is not a Person identifier");
+      }
+      this.socket_status = data.socket_status;
+    } else {
+      // dummy Value
+      this.socket_status = true;
     }
 
   }

@@ -76,7 +76,7 @@ app.get('/bots/:idddd', (req, res)=>{
 });
 
 //End point to get an answer
-app.post('/anwser', async (req, res)=>{ // TODO
+app.post('/answer', async (req, res)=>{ // TODO
 
 	let question = req.body.input;
 	console.log("Question reçue par le serveur : "+question);
