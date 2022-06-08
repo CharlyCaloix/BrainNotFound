@@ -18,7 +18,7 @@ class Bot{
       if(!isInt(data.id)){
         throw new Error("Task Creation : passed Id is not an integer");
       }
-      this.id = data.id;
+      this.id = parseInt(data.id);
     } else {
       this.id = parseInt(    Math.floor(Math.random() * Math.floor(100000))     );
     }
@@ -62,7 +62,7 @@ class Bot{
   
     if(undefined != data.comment) {
       if(!isString(data.comment)){
-        throw new Error("Task Creation : passed assignement is not a Person identifier");
+        throw new Error("Task Creation : passed assignement is not a comment");
       }
       this.comment = data.comment;
     } else {
@@ -71,23 +71,25 @@ class Bot{
     }
 
     if(undefined != data.discord_status) {
-      if(false){ // TODO
-        throw new Error("Task Creation : passed assignement is not a Person identifier");
+      if(data.discord_status!=0 && data.discord_status!=1){ // no way to check bool status yet
+        //console.log(data.discord_status);
+        throw new Error("Task Creation : passed assignement is not a Socket Access value");
       }
-      this.discord_status = data.discord_status;
+      this.discord_status = parseInt(data.discord_status);
     } else {
       // dummy Value
-      this.discord_status = true;
+      this.discord_status = 1;
     }
 
     if(undefined != data.socket_status) {
-      if(false){ // TODO
-        throw new Error("Task Creation : passed assignement is not a Person identifier");
+      if(data.socket_status!=0 && data.socket_status!=1){ // TODO
+        //console.log(data.socket_status);
+        throw new Error("Task Creation : passed assignement is not a Socket Access value");
       }
-      this.socket_status = data.socket_status;
+      this.socket_status = parseInt(data.socket_status);
     } else {
       // dummy Value
-      this.socket_status = true;
+      this.socket_status = 1;
     }
 
   }

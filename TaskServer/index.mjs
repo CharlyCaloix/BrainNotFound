@@ -18,9 +18,22 @@ const app = express();
 app.use(cors())
 ////
 
+// Array of bots to run
+let botArray = new Array();
+
+
 let mainUser = "local-user";
 let mainBot = new RiveScript();
 mainBot.loadFile("./../client/brains/baseBrain.rive").then(botLoaded).catch(botLoadingFailed);
+// Ajout de ce bot dans le tableau des bots
+botArray.push(mainBot);
+
+//let secondaryBot = new RiveScript();
+//secondaryBot.loadFile("./../client/brains/secondBrain.rive").then(secondaryBot.sortReplies()).catch(botLoadingFailed);
+
+
+
+//botArray.push(secondaryBot);
 
 const port = 3001
 
@@ -75,13 +88,15 @@ app.get('/bots/:idddd', (req, res)=>{
 	}
 });
 
-//End point to get an answer
+//End point to get an answer, not RESTful yet
 app.post('/answer', async (req, res)=>{ // TODO
 
 	let question = req.body.input;
 	console.log("Question reçue par le serveur : "+question);
 	try{
-		let reponse = await mainBot.reply(mainUser, question);
+		//let reponse = await mainBot.reply(mainUser, question);
+		//let reponse = await secondaryBot.reply(mainUser, question);
+		let reponse = await botArray[0].reply(mainUser, question);
 		console.log("Réponse du serveur : "+reponse);
 		res.status(200).json(reponse);
 	}
@@ -111,7 +126,7 @@ app.delete('/bots/:id',(req,res)=>{
 });
 
 
-//create a new bot (POST HTTP method)
+// End point to create a new bot
 app.post('/bots/',(req,res)=>{
 	let theBotToAdd = req.body;
 	console.log(theBotToAdd);
@@ -127,6 +142,7 @@ app.post('/bots/',(req,res)=>{
 		});	
 });
 
+// End point to modify a bot
 app.patch('/bots/:id',(req,res)=>{
 	let id = req.params.id;
 	let botToPatch = req.body;
@@ -148,8 +164,7 @@ app.patch('/bots/:id',(req,res)=>{
 	}	
 });
 
-//
-
+// PUT endpoint, not used yet. Replaces an object with another.
 app.put('/bots/:id',(req,res)=>{
 	let id = req.params.id;
 	if(!isInt(id)) { //Should I propagate a bad parameter to the model?

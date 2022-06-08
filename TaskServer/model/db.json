@@ -1,112 +1,40 @@
 {
   "bots": [
     {
-      "id": 66939,
+      "id": 81049,
       "name": "Another Mark",
-      "startDate": "2022-05-31T13:39:31.078Z",
+      "startDate": "2022-06-08T13:05:44.438Z",
       "pathToFile": "/brains/baseBraine.rive",
       "tags": [
         "New !"
       ],
       "comment": "This bot was not commented yet",
       "discord_status": true,
-      "socket_status": true
+      "socket_status": 1
     },
     {
-      "id": 1323,
+      "id": 70011,
       "name": "Another Mark",
-      "startDate": "2022-05-31T13:40:27.075Z",
+      "startDate": "2022-06-08T14:50:13.046Z",
       "pathToFile": "/brains/baseBraine.rive",
       "tags": [
         "New !"
       ],
       "comment": "This bot was not commented yet",
-      "discord_status": true,
-      "socket_status": true
+      "discord_status": 1,
+      "socket_status": 1
     },
     {
-      "id": 60955,
-      "name": "Another Mark",
-      "startDate": "2022-05-31T14:02:06.651Z",
-      "pathToFile": "/brains/baseBraine.rive",
+      "id": 1,
+      "name": "",
+      "startDate": "2022-06-08T14:56:17.018Z",
+      "pathToFile": "/brains/baseBrain.rive",
       "tags": [
         "New !"
       ],
-      "comment": "This bot was not commented yet",
-      "discord_status": true,
-      "socket_status": true
-    },
-    {
-      "id": 53036,
-      "name": "King Mark",
-      "startDate": "2022-06-01T06:46:54.517Z",
-      "pathToFile": "/brains/baseBraine.rive",
-      "tags": [
-        "New !"
-      ],
-      "comment": "This bot was not commented yet",
-      "discord_status": true,
-      "socket_status": true
-    },
-    {
-      "id": 12273,
-      "name": "Another Mark",
-      "startDate": "2022-06-01T06:51:28.387Z",
-      "pathToFile": "/brains/baseBraine.rive",
-      "tags": [
-        "New !"
-      ],
-      "comment": "This bot was not commented yet",
-      "discord_status": true,
-      "socket_status": true
-    },
-    {
-      "id": 71668,
-      "name": "Another Mark",
-      "startDate": "2022-06-01T06:51:32.742Z",
-      "pathToFile": "/brains/baseBraine.rive",
-      "tags": [
-        "New !"
-      ],
-      "comment": "This bot was not commented yet",
-      "discord_status": true,
-      "socket_status": true
-    },
-    {
-      "id": 80300,
-      "name": "Another Mark",
-      "startDate": "2022-06-01T06:53:44.513Z",
-      "pathToFile": "/brains/baseBraine.rive",
-      "tags": [
-        "New !"
-      ],
-      "comment": "This bot was not commented yet",
-      "discord_status": true,
-      "socket_status": true
-    },
-    {
-      "id": 86392,
-      "name": "Another Mark",
-      "startDate": "2022-06-01T06:54:53.768Z",
-      "pathToFile": "/brains/baseBraine.rive",
-      "tags": [
-        "New !"
-      ],
-      "comment": "This bot was not commented yet",
-      "discord_status": true,
-      "socket_status": true
-    },
-    {
-      "id": 53356,
-      "name": "Another Mark",
-      "startDate": "2022-06-01T06:58:43.282Z",
-      "pathToFile": "/brains/baseBraine.rive",
-      "tags": [
-        "New !"
-      ],
-      "comment": "This bot was not commented yet",
-      "discord_status": true,
-      "socket_status": true
+      "comment": "Comment?",
+      "discord_status": 0,
+      "socket_status": 1
     }
   ]
 }

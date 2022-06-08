@@ -56,19 +56,24 @@
 
 		let botListElt;
 		let modal;
+
 		// BOT INPUTS
 		let inputName;
 		let inputID;
 		let inputPath;
 		let inputComment;
 		let addNewBotButton;
+		let inputDiscord;
+		let inputSocket;
+
 		// CHAT
 		let inputQuestionTitle;
 		let botOutput;
 		let submitInput;
+
 		// Bot tab
 		//Ce tableau regroupe les bots qui ont été affichés, pour que les élements qui n'ont pas été modifiés ne changent
-		// pas en blanc. Par exemple : si le nom est laissé inchangé, modifier ne doit pas changer son nom en "".
+		// pas en blanc. Par exemple : si le nom est laissé inchangé, modifier le bot ne doit pas changer son nom en "".
 		let botTab = new Array();
 
 		function init(){
@@ -79,6 +84,9 @@
 			inputID = document.getElementById("inputID");
 			inputPath = document.getElementById("inputPath");
 			inputComment = document.getElementById("inputComment");
+			inputDiscord = document.getElementById("inputDiscord");
+			inputSocket = document.getElementById("inputSocket");
+
 			// CHAT
 			inputQuestionTitle = document.getElementById("inputQuestionTitle");
 			botOutput = document.getElementById("botOutput");
@@ -90,6 +98,8 @@
 			newBotButton.addEventListener("click",()=>{modal.style.display = "block";});
 			addNewBotButton = document.getElementById("addNewBotButton");
 			addNewBotButton.addEventListener("click",createNewBot);
+			cancelAddBot = document.getElementById("cancelAddBot");
+			cancelAddBot.addEventListener("click", ()=>{modal.style.display = "none";})
 
 			// CHAT
 			submitInput = document.getElementById("submitInput");
@@ -240,8 +250,7 @@ function reloadListPerson() {
 			affichage_comment.setAttribute("placeholder",bot.comment);
 
 			let discord_button= document.createElement("button");
-			console.log("Discord status of the bot : "+bot.discord_status);
-			if(bot.discord_status==true){
+			if(bot.discord_status==1){
 				discord_button.setAttribute("style","color:green");
 			}else{
 				discord_button.setAttribute("style","color:red");
@@ -250,7 +259,7 @@ function reloadListPerson() {
 			discord_button.innerHTML="Discord";
 
 			let socket_button= document.createElement("button");
-			if(bot.socket_status==true){
+			if(bot.socket_status==1){
 				socket_button.setAttribute("style","color:green");
 			}else{
 				socket_button.setAttribute("style","color:red");
@@ -264,13 +273,12 @@ function reloadListPerson() {
 			affichageDiv.appendChild(affichage_path);
 			affichageDiv.appendChild(affichage_tags);
 			affichageDiv.appendChild(affichage_comment);
-			affichageDiv.appendChild(discord_button);
-			affichageDiv.appendChild(socket_button);
-
 
 			item.appendChild(affichageDiv);
 
-		
+			// Il est plus agréable d'avoir tous les boutons groupés
+			item.appendChild(discord_button);
+			item.appendChild(socket_button);
 			
 			// Adding a DELETE Button
 			let delBtn = document.createElement("button");
@@ -280,18 +288,13 @@ function reloadListPerson() {
 			delBtn.setAttribute("onclick",`deleteBot(${bot.id})`);
 			item.appendChild(delBtn);
 
-
+			// Comme l'ID n'est pas modifiable (en tout cas, pas en l'état du site), un "PUT" n'a pour l'instant pas de sens.
 			// Adding a PUT Button
-			let putBtn = document.createElement("button");
+			/*let putBtn = document.createElement("button");
 			putBtn.innerHTML = "Remplacer (PUT)";
 			putBtn.setAttribute("onclick",`replaceBot(${bot.id})`);
 			item.appendChild(putBtn);
-			
-			// Adding a PATCH Button
-			let patchBtn = document.createElement("button");
-			patchBtn.innerHTML = "Patcher";
-			patchBtn.setAttribute("onclick",`updateBot(${bot.id})`);
-			item.appendChild(patchBtn);
+			*/
 
 			// Adding a modification Button
 			let modifBtn = document.createElement("button");
@@ -311,9 +314,15 @@ function reloadListPerson() {
 			var numeroBot = botTab.findIndex(x => x.id === botId);
 			var bot = botTab[numeroBot];
 			console.log("Bot dont le statut doit changer : "+bot);
+			console.log(bot.discord_status)
 			var setup = bot.discord_status;
-			var newSetup= !setup;
-			console.log(`updating status of bot : ${bot}, ${setup} => ${newSetup}`);
+			var newSetup;
+			if(setup == 0){
+				newSetup=1;
+			}else{
+				newSetup=0;
+			}
+			//console.log(`updating status of bot : ${bot}, ${setup} => ${newSetup}`);
 			//Create the request
 			let myHeaders = new Headers();
 			myHeaders.append('Content-Type', 'application/json');
@@ -347,13 +356,21 @@ function reloadListPerson() {
 		}
 
 		function update_socket_status(botId){
-			// On cherche la valeur courante du statut dans le bot bot
+			// On cherche la valeur courante du statut du bot dans la table
 			var numeroBot = botTab.findIndex(x => x.id === botId);
 			var bot = botTab[numeroBot];
-			console.log("Bot dont le statut doit changer : "+bot);
+			//console.log("Bot dont le statut doit changer : "+bot);
 			var setup = bot.socket_status;
-			var newSetup= !setup;
-			console.log(`updating status of bot : ${bot}, ${setup} => ${newSetup}`);
+			// Sa disponiblité doit être la négation de l'ancienne (oui/non)
+			var newSetup;
+			if(setup == 0){
+				newSetup=1;
+			}else{
+				newSetup=0;
+			}
+			
+			//console.log(`updating status of bot : ${bot}, ${setup} => ${newSetup}`);
+
 			//Create the request
 			let myHeaders = new Headers();
 			myHeaders.append('Content-Type', 'application/json');
@@ -392,7 +409,7 @@ function reloadListPerson() {
 			var bot = botTab.findIndex(x => x.id === botId);
 			// On récupère les valeurs rentrées
 			var modTab = document.getElementsByClassName(`modif_${botId}`);
-			console.log("Tableau des modifications, nom : "+modTab[1].value);
+			//console.log("Tableau des modifications, nom : "+modTab[1].value);
 
 			// On vérifie qu'on modifie les élements qui ont bien été changés
 			var bot_p0 = modTab[0].value;
@@ -400,7 +417,7 @@ function reloadListPerson() {
 				bot_p0=bot.id
 			}
 			var bot_p1 = modTab[1].value;
-			console.log(bot_p1);
+			//console.log(bot_p1);
 			if( bot_p1.localeCompare("") == 0 ){
 				bot_p1=bot.name
 			}
@@ -460,6 +477,7 @@ function reloadListPerson() {
 			})	
 		}
 
+		// Request to delete a bot
 		function deleteBot(botId){
 			
 			let myHeaders = new Headers();
@@ -488,8 +506,8 @@ function reloadListPerson() {
 
 		function replaceBot(botId){
 			console.log(`replacing bot with Id ${botId}`);
-			//TODO
-			//Obvioulsly, you will need to launch a modal
+			// Il s'agit d'une fonction permettant d'envoyer une requête "PUT", qui n'est pas utilisable
+			// du fait de l'ID des bots, qui ne peut pas être changé par l'interface.
 		}
 
 		function updateBot(botId){
@@ -535,20 +553,25 @@ function reloadListPerson() {
   			modal.style.display = "none"; // Make the modal disapear
 
 			//Create the request
-			console.log(`Input Name value : ${inputName.value}`);
-			console.log(`Input ID value : ${inputID.value}`);
-			console.log(`Input Path value : ${inputPath.value}`);
-			console.log(`Input Comment value : ${inputComment.value}`);
+			//console.log(`Input Name value : ${inputName.value}`);
+			//console.log(`Input ID value : ${inputID.value}`);
+			//console.log(`Input Path value : ${inputPath.value}`);
+			//console.log(`Input Comment value : ${inputComment.value}`);
 
 			let myHeaders = new Headers();
 			myHeaders.append('Content-Type', 'application/json');
+
+			console.log("Valeur select : "+ inputDiscord.value)
+			console.log("Valeur select socket: "+ inputSocket.value)
 			let payload = {
 					name:inputName.value,
 					id:inputID.value,
 					pathToFile:inputPath.value,
-					comment:inputComment.value
+					comment:inputComment.value,
+					discord_status:inputDiscord.value,
+					socket_status:inputSocket.value
            	};
-			   //console.log("Payload : "+payload);
+			console.log("Payload : "+payload);
 			let myBody = JSON.stringify(payload);
 			let myInit = { 
 				method: 'POST',
@@ -613,6 +636,9 @@ function reloadListPerson() {
 
 </head>
 <body>
+	<h1>Bot manager</h1>
+	<p>Welcome to your bot management platform.</p>
+	<p>Reminder : you can not modify a bot's ID.</p>
 
 	<ul id="botListUL">
 	</ul>
@@ -620,24 +646,54 @@ function reloadListPerson() {
    <ul id="personListUL">
     </ul>
 
-	<button id="newBotButton">ADD A NEW BOT</button>
+	<button id="newBotButton">AJOUTER UN BOT</button>
 	<div id="newBotModal" class="modal">
 		
 		<div class="modal-content">
-			<h1>Create a new Bot</h1>
-    		<label for="inputName">Name:</label>
+			<h1>Création d'un nouveau bot</h1>
+
+			<p>
+    		<label for="inputName">Nom :</label>
     		<input type="text" id="inputName" name="name"></input>
+			</p>
 
-			<label for="inputID">ID:</label>
+			<p>
+			<label for="inputID">ID :</label>
     		<input type="number" id="inputID" name="id"></input>
+			</p>
 
-			<label for="inputPath">Path of brain:</label>
+			<p>
+			<label for="inputPath">Chemin du cerveau du bot :</label>
     		<input type="text" id="inputPath" name="path" value="/brains/baseBrain.rive"></input>
+			</p>
 
-			<label for="inputComment">Comment:</label>
+			<p>
+			<label for="inputComment">Commentaire :</label>
     		<input type="text" id="inputComment" name="Comment"></input>
+			</p>
 
-    		<button id="addNewBotButton">Add This Bot</button>
+			<p>
+			Connexion à Discord :
+			<select id="inputDiscord">
+				<option value=0>--- Choix ---</option>
+				<option value=1>Oui</option>
+				<option value=0>Non</option>
+			</select>
+			</p>
+
+			<p>
+			Connexion à une Socket :
+			<select id="inputSocket">
+				<option value=0>--- Choix ---</option>
+				<option value=1>Oui</option>
+				<option value=0>Non</option>
+			</select>
+			</p>
+
+			<p>
+    		<button id="addNewBotButton">Ajouter ce bot</button>
+			<button id="cancelAddBot">Annuler</button>
+			</p>
     	</div>
     	
 	</div>
