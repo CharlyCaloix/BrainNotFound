@@ -23,30 +23,6 @@
       "comment": "This bot was not commented yet",
       "discord_status": 1,
       "socket_status": 1
-    },
-    {
-      "id": 43664,
-      "name": "Another Mark",
-      "startDate": "2022-06-08T15:54:00.844Z",
-      "pathToFile": "/brains/baseBraine.rive",
-      "tags": [
-        "New !"
-      ],
-      "comment": "This bot was not commented yet",
-      "discord_status": 1,
-      "socket_status": 1
-    },
-    {
-      "id": 28885,
-      "name": "Another Mark",
-      "startDate": "2022-06-08T15:54:01.296Z",
-      "pathToFile": "/brains/baseBraine.rive",
-      "tags": [
-        "New !"
-      ],
-      "comment": "This bot was not commented yet",
-      "discord_status": 1,
-      "socket_status": 1
     }
   ]
 }

@@ -1,20 +1,38 @@
 ! version = 2.0
 
+//Bot variables
+! var name = Bot1
+! var musicStyle = Metal
+
+// Substitutions
+! sub im = i am
+! sub i'm = i am
+! sub hi = hello
+! sub hey = hello
 + hello bot
 - Hello, human!
 
-+ hi
-- Hi :) nice to meet you!
-- Hi, would you like to knw each other? How old are you?
++ hello
+- Hi :) nice to meet you!{weight=18}
+- Hi, would you like to know each other? How old are you?{weight=41}
+- Hi, would you like to know each other? What is your name?{weight=41}
 
 + who are you *
 - I am bot2.
 - I am your humble bot 2.
 
-+ i am # years old
++ i am #
 - Eh! I am 10937.31 times younger than <star1> years old.
 - Did you blow all of your <star1> candles last birthday? I wish I could blow candles.
 
++ i am _
+- I like your name, <star1>. Mine is ... A secret ! ^v^
+- Did you blow all of your <star1> candles last birthday? I wish I could blow candles.
+
++ google *
+- Of course the first thing you want to do with a bot is googling!
+
 + *
 - I am a very new bot, could your repeat your question with different words please? ^^
-- I am afraid I didI
+- I am afraid I did not properly understand you :S
+- I am an English bot, I don't speak anything else yet. Except Sith. No questions.

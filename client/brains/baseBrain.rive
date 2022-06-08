@@ -1,14 +1,27 @@
 ! version = 2.0
 
+! sub ok = okay
+! sub hi = hello
+! sub hey = hello
+
 + hello bot
 - Hello, human!
 
-+ hi
-- Hi :)
++ hello
+- Hi :) how are you?
+- Hello, what is your name? :o
 
 + who are you
 - I am your new friend, bot1!
 - I am the friendly bot1, what about you? /:)
 
++ i am (fine|okay)
+- Happy to hear it! :)
+- Nice day for you? :P
+
++ i am *
+- Hello <star1>! I am... I don't know my own name yet :(
+
 + *
 - I am a very new bot, could your repeat your question with different words please? ^^
+- You're so smart, even as a brain I don't get the meaning of your sentence :o
