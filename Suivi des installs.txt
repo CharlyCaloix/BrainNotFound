@@ -1,1 +1,0 @@
-Pour utiliser rivescript : faire npm install rivescript

@@ -1,0 +1,62 @@
+{
+  "bots": [
+    {
+      "id": 8005,
+      "name": "Mark",
+      "startDate": "2022-06-08T16:48:55.614Z",
+      "pathToFile": "/brains/baseBraine.rive",
+      "tags": [
+        "New !"
+      ],
+      "comment": "The base brain",
+      "discord_status": 1,
+      "socket_status": 1
+    },
+    {
+      "id": 38288,
+      "name": "Another Mark",
+      "startDate": "2022-06-08T16:52:48.325Z",
+      "pathToFile": "/brains/baseBraine.rive",
+      "tags": [
+        "New !"
+      ],
+      "comment": "A sweet helper",
+      "discord_status": 0,
+      "socket_status": 0
+    },
+    {
+      "id": 59828,
+      "name": "Steeve",
+      "startDate": "2022-06-08T16:53:02.892Z",
+      "pathToFile": "/brains/secondBrain.rive",
+      "tags": [
+        "New !"
+      ],
+      "comment": "Funny and entertaining bot",
+      "discord_status": 0,
+      "socket_status": 1
+    },
+    {
+      "id": 33288,
+      "name": "Patrick",
+      "startDate": "2022-06-08T16:53:04.292Z",
+      "pathToFile": "/brains/baseBraine.rive",
+      "tags": [
+        "New !"
+      ],
+      "comment": "The best friend of a human",
+      "discord_status": 1,
+      "socket_status": 0
+    },
+    {
+      "id": 32928,
+      "name": "Hadrien",
+      "startDate": "2022-06-08T16:53:43.056Z",
+      "pathToFile": "/brains/secondBrain.rive",
+      "tags": "Friendly",
+      "comment": "This bot was not commented yet",
+      "discord_status": 1,
+      "socket_status": 1
+    }
+  ]
+}
