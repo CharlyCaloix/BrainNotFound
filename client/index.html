@@ -137,6 +137,7 @@
 let personListElt;
 
 // CHAT
+// Permet d'obtenir une réponse au message de l'utilisateur
 async function answerUser(){
 	let input = inputQuestionTitle.value;
 	//console.log(input);
@@ -147,62 +148,14 @@ async function answerUser(){
 	}
 }
 
-//BOT
-function botLoaded(){
-	console.log("Chatbot is ready to play with.");
-	chatbot.sortReplies();
-}
-
-function botLoadingFailed(){
-	console.log("Chatbot failed loading.");
-}
-// ---------------------------------------------
 
 function initPerson() {
     personListElt = document.getElementById("personListUL");
     reloadListPerson();
 }
 
-function reloadListPerson() {
-    //first, clean up
-    while (personListElt.firstChild) {
-        personListElt.removeChild(personListElt.firstChild);
-    }
-    let myHeaders = new Headers();
-    myHeaders.append('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
-    myHeaders.append('Accept', 'application/json');
-    myHeaders.append('Set-Cookie', 'passPhrase=Hop');
 
-    let myInit = {
-        method: 'GET',
-        headers: myHeaders,
-        credentials: 'same-origin',
-        mode: 'cors',
-        cache: 'no-store'
-    };
-
-    let myURL = `http://localhost:3001/persons`;
-
-    fetch(myURL, myInit)
-        .then((httpResponse) => {
-            for (let field of httpResponse.headers) {
-                //console.log(`raw = ${field}`);
-            }
-            return httpResponse.json()
-        })
-        .then((setOfPersons) => {
-            for (let person of setOfPersons) {
-                let item = document.createElement("li");
-                item.innerHTML += ` ${person.personId}`;
-                personListElt.appendChild(item);
-            }
-        })
-        .catch((err) => {
-            console.log(`ERROR : ${err}`);
-        })
-}
-
-
+		// Permet de mettre à jour la liste après une requête
 		function reloadList(){
 			botTab=new Array();
 			//first, clean up
@@ -242,7 +195,7 @@ function reloadListPerson() {
 		}
 
 
-
+		// Permet de créer tout ce qui est nécessaire à l'affichage d'un bot dans la liste des bots
 		function createItem(bot){
 			botTab.push(bot);
 
@@ -335,6 +288,7 @@ function reloadListPerson() {
 			return item;
 		}
 
+		// Permet de changer l'autorisation d'un bot à communiquer par Discord
 		function update_discord_status(botId){
 			// On cherche la valeur courante du statut dans le bot bot
 			var numeroBot = botTab.findIndex(x => x.id === botId);
@@ -381,6 +335,7 @@ function reloadListPerson() {
 			})
 		}
 
+		// Permet de changer l'autorisation d'un bot à communiquer par Socket
 		function update_socket_status(botId){
 			// On cherche la valeur courante du statut du bot dans la table
 			var numeroBot = botTab.findIndex(x => x.id === botId);
@@ -429,6 +384,7 @@ function reloadListPerson() {
 			})
 		}
 
+		//Permet de changer les attributs du bot selon les valeurs dans l'interface
 		function updateBot_2(botId){
 			console.log(`updating bot with Id ${botId}`);
 			// On récupère les valeurs que le bot avait avant d'être modifié
@@ -534,43 +490,6 @@ function reloadListPerson() {
 			console.log(`replacing bot with Id ${botId}`);
 			// Il s'agit d'une fonction permettant d'envoyer une requête "PUT", qui n'est pas utilisable
 			// du fait de l'ID des bots, qui ne peut pas être changé par l'interface.
-		}
-
-		function updateBot(botId){
-			console.log(`updating bot with Id ${botId}`);
-
-			//Create the request
-			let myHeaders = new Headers();
-			myHeaders.append('Content-Type', 'application/json');
-			let payload = {
-					name:"Steeve",
-					id:botId,
-					comment:"Another bot has changed !"
-           	};
-			let myBody = JSON.stringify(payload);
-			let myInit = { 
-				method: 'PATCH',
-           		headers: myHeaders,
-           		mode: 'cors',
-           		cache: 'default',
-           		body:myBody
-        	};
-        	let myURL = "http://localhost:3001/bots";
-
-        	//launch the request
-			fetch(myURL,myInit)
-			.then((httpResponse)=>{
-				return httpResponse.text();
-			})
-			.then((responseBody)=>{
-				reloadList();
-				//clear fields
-				inputName.value="";
-				console.log(`response is ${responseBody}`);
-			})
-			.catch((err)=>{
-				console.log(`ERROR : ${err}, ${err.stack}`);
-			})	
 		}
 
 		// Crée un nouveau cerveau avec les données du modal de création

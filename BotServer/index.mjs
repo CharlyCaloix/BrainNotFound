@@ -13,18 +13,18 @@ const app = express();
 app.use(cors())
 ////
 
+// Definition d'un utilisateur éventuel : inutilisé pour l'instant
+// let mainUser = "local-user";
 
-let mainUser = "local-user";
+// bot 1
 let mainBot = new RiveScript();
 mainBot.loadFile("./../client/brains/baseBrain.rive").then(botLoaded).catch(botLoadingFailed);
 
+// bot 2
 let secondaryBot = new RiveScript();
 secondaryBot.loadFile("./../client/brains/secondBrain.rive").then(bot2Loaded).catch(bot2LoadingFailed);
 
 
-
-
-//botArray.push(secondaryBot);
 
 const port = 3001
 
@@ -41,7 +41,7 @@ app.get('/', (req, res)=>{
     }
 });
 
-
+// End point pour obtenir tous les bots
 app.get('/bots/', (req, res)=>{
 	try{
 		let myArrayOfBots;
@@ -56,7 +56,7 @@ app.get('/bots/', (req, res)=>{
 	}
 });
 
-//End point to get a task
+//End point to get a bot in particular, of id  ":idddd" (GET method)
 app.get('/bots/:idddd', (req, res)=>{
 	let id = req.params.idddd;
 	if(!isInt(id)) {
@@ -110,6 +110,7 @@ app.post('/example2', async (req, res)=>{ // TODO
 	}
 });
 
+// End point to delete a bot of a particular ID
 app.delete('/bots/:id',(req,res)=>{
 	let id = req.params.id;
 	if(!isInt(id)) { //Should I propagate a bad parameter to the model?
@@ -130,7 +131,7 @@ app.delete('/bots/:id',(req,res)=>{
 });
 
 
-// End point to create a new bot
+// End point to create a new bot (POST method)
 app.post('/bots/',(req,res)=>{
 	let theBotToAdd = req.body;
 	console.log(theBotToAdd);
@@ -197,9 +198,7 @@ BotService.create().then(ts=>{
 	});
 });
 
-//HELPER
-
-//BOT
+//BOT functions
 function botLoaded(){
 	console.log("Chatbot 1 is ready to play with.");
 	mainBot.sortReplies();

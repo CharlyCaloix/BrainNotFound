@@ -10,7 +10,7 @@ class Bot{
   static socket_status=this.socket_status;
 
 
-  constructor(data){   //id, name, startDate, pathToFile
+  constructor(data){   //id, name, startDate, pathToFile...
 
     if(undefined != data.id) {
       if(!isInt(data.id)){
