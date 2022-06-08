@@ -18,18 +18,14 @@ const app = express();
 app.use(cors())
 ////
 
-// Array of bots to run
-let botArray = new Array();
-
 
 let mainUser = "local-user";
 let mainBot = new RiveScript();
 mainBot.loadFile("./../client/brains/baseBrain.rive").then(botLoaded).catch(botLoadingFailed);
-// Ajout de ce bot dans le tableau des bots
-botArray.push(mainBot);
 
-//let secondaryBot = new RiveScript();
-//secondaryBot.loadFile("./../client/brains/secondBrain.rive").then(secondaryBot.sortReplies()).catch(botLoadingFailed);
+let secondaryBot = new RiveScript();
+secondaryBot.loadFile("./../client/brains/secondBrain.rive").then(bot2Loaded).catch(bot2LoadingFailed);
+
 
 
 
@@ -88,15 +84,33 @@ app.get('/bots/:idddd', (req, res)=>{
 	}
 });
 
-//End point to get an answer, not RESTful yet
-app.post('/answer', async (req, res)=>{ // TODO
+//End point to get an answer from baseBot
+app.post('/example', async (req, res)=>{ // TODO
 
 	let question = req.body.input;
-	console.log("Question reçue par le serveur : "+question);
+	console.log("Question reçue par le serveur (bot 1): "+question);
 	try{
 		//let reponse = await mainBot.reply(mainUser, question);
 		//let reponse = await secondaryBot.reply(mainUser, question);
-		let reponse = await botArray[0].reply(mainUser, question);
+		let reponse = await mainBot.reply(mainUser, question);
+		console.log("Réponse du serveur : "+reponse);
+		res.status(200).json(reponse);
+	}
+	catch(err){
+		console.log(`Error ${err} thrown... stack is : ${err.stack}`);
+		res.status(404).send('NOT FOUND');
+	}
+});
+
+//End point to get an answer from 2nd bot
+app.post('/example2', async (req, res)=>{ // TODO
+
+	let question = req.body.input;
+	console.log("Question reçue par le serveur (bot 2): "+question);
+	try{
+		//let reponse = await mainBot.reply(mainUser, question);
+		//let reponse = await secondaryBot.reply(mainUser, question);
+		let reponse = await secondaryBot.reply(mainUser, question);
 		console.log("Réponse du serveur : "+reponse);
 		res.status(200).json(reponse);
 	}
@@ -208,12 +222,21 @@ BotService.create(personServiceAccessPoint).then(ts=>{
 
 //BOT
 function botLoaded(){
-	console.log("Chatbot is ready to play with.");
+	console.log("Chatbot 1 is ready to play with.");
 	mainBot.sortReplies();
 }
 
 function botLoadingFailed(){
-	console.log("Chatbot failed loading.");
+	console.log("Chatbot 1 failed loading.");
+}
+
+function bot2Loaded(){
+	console.log("Chatbot 2 is ready to play with.");
+	secondaryBot.sortReplies();
+}
+
+function bot2LoadingFailed(){
+	console.log("Chatbot 2 failed loading.");
 }
 // ---------------------------------------------
 

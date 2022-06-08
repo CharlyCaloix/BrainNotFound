@@ -58,6 +58,10 @@
 		let modal;
 
 		// BOT INPUTS
+
+		// Bot utilisé, 0 pour baseBrain, et 1 pour secondBrain
+		let botUsed = 0;
+
 		let inputName;
 		let inputID;
 		let inputPath;
@@ -67,6 +71,8 @@
 		let inputSocket;
 
 		// CHAT
+		let botUsedInChat;
+		let swapBot;
 		let inputQuestionTitle;
 		let botOutput;
 		let submitInput;
@@ -88,6 +94,22 @@
 			inputSocket = document.getElementById("inputSocket");
 
 			// CHAT
+
+			//Change le bot utilisé
+			botUsedInChat=document.getElementById("botUsedInChat");
+			botUsedInChat.innerText="Brain de base"
+			swapBot =  document.getElementById("swapBot");
+			swapBot.addEventListener("click", ()=>{
+				if(botUsed==0){
+					botUsed=1;
+					botUsedInChat.innerText="Second Brain"
+				}else{
+					botUsed=0;
+					botUsedInChat.innerText="Brain de base"
+				}
+				//console.log("Bot utilisé : "+botUsed)
+			})
+
 			inputQuestionTitle = document.getElementById("inputQuestionTitle");
 			botOutput = document.getElementById("botOutput");
 
@@ -118,7 +140,11 @@ let personListElt;
 async function answerUser(){
 	let input = inputQuestionTitle.value;
 	//console.log(input);
-	await sendRequestToBrain(input);
+	if(botUsed==0){
+		await sendRequestToBrain1(input);
+	}else{
+		await sendRequestToBrain2(input);
+	}
 }
 
 //BOT
@@ -599,7 +625,7 @@ function reloadListPerson() {
 		}
 
 		// Envoie une question à un cerveau en particulier
-		function sendRequestToBrain(question){
+		function sendRequestToBrain2(question){
 			//Create the request
 			let myHeaders = new Headers();
 			myHeaders.append('Content-Type', 'application/json');
@@ -614,7 +640,43 @@ function reloadListPerson() {
            		cache: 'default',
            		body:myBody
         	};
-        	let myURL = "http://localhost:3001/answer";
+
+        	let myURL = "http://localhost:3001/example2";
+			let response;
+
+        	//launch the request
+			fetch(myURL,myInit)
+			.then((httpResponse)=>{
+				console.log(`Retour de la question (then) : ${httpResponse}`);
+				return httpResponse.text();
+			})
+			.then((responseBody)=>{
+				console.log(`Retour de la question (then 2) : ${responseBody}`);
+				botOutput.textContent = responseBody;
+			})
+			.catch((err)=>{
+				console.log(`ERROR : ${err}`);
+			})
+		}
+
+
+		// Envoie une question au cerveau de base
+		function sendRequestToBrain1(question){
+			//Create the request
+			let myHeaders = new Headers();
+			myHeaders.append('Content-Type', 'application/json');
+			let payload = {
+           			input:question
+           	};
+			let myBody = JSON.stringify(payload);
+			let myInit = { 
+				method: 'POST',
+           		headers: myHeaders,
+           		mode: 'cors',
+           		cache: 'default',
+           		body:myBody
+        	};
+        	let myURL = "http://localhost:3001/example";
 			let response;
 
         	//launch the request
@@ -700,6 +762,9 @@ function reloadListPerson() {
 	<div>
 		<h1>Talk to a bot</h1>
 
+		<! Choisir un bot>
+		<button id="swapBot" style="color:blue">Cliquer pour passer du premier au second bot</button>
+		<span id="botUsedInChat" style="color:blue"></span>
 		<! Poser une question>
 		<p>
 			<label for="inputQuestionTitle">Question:</label>
@@ -709,7 +774,7 @@ function reloadListPerson() {
 
 		<! Avoir une réponse>
 		<p>
-			Answer : <span id="botOutput"></span>
+			Réponse : <span id="botOutput"></span>
 		</p>
 
 	</div>
